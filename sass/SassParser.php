@@ -793,6 +793,9 @@ class SassParser {
 				}
 				return new SassImportNode($token);
 				break;
+			case '@each':
+				return new SassEachNode($token);
+				break;
 			case '@for':
 				return new SassForNode($token);
 				break;

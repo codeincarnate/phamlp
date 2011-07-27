@@ -47,6 +47,13 @@ class SassDebugNodeException extends SassNodeException {}
 class SassDirectiveNodeException extends SassNodeException {}
 
 /**
+ * SassEachNodeException class.
+ * @package			PHamlP
+ * @subpackage	Sass.tree
+ */
+class SassEachNodeException extends SassNodeException {}
+
+/**
  * SassExtendNodeException class.
  * @package			PHamlP
  * @subpackage	Sass.tree
