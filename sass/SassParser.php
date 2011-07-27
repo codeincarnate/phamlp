@@ -459,10 +459,8 @@ class SassParser {
 		if ($isFile) {
 			$this->filename = SassFile::getFile($source, $this);
 			
-			if ($isFile) {
-				$this->syntax = substr($this->filename, -4);
-			}
-			elseif ($this->syntax !== SassFile::SASS && $this->syntax !== SassFile::SCSS) {
+			$this->syntax = substr($this->filename, -4);
+			if ($this->syntax !== SassFile::SASS && $this->syntax !== SassFile::SCSS) {
 				throw new SassException('Invalid {what}', array('{what}'=>'syntax option'));
 			}
 
