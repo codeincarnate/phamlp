@@ -937,6 +937,7 @@ class HamlParser {
 		}
 		
 		preg_match_all(self::REGEX_ATTRIBUTES, $subject, $attrs, PREG_SET_ORDER);
+    // print_r($attrs);
 		foreach ($attrs as $attr) {
 			if (!empty($attr[1])) { // HTML5 Custom Data Attributes
 				$dataAttributes = $this->parseAttributeHash(substr($attr[2], 1));
@@ -954,9 +955,6 @@ class HamlParser {
 			elseif (!empty($attr[6])) {
 				$attributes[$attr[3]] = $this->interpolate($attr[6], $attr[3]);
 			}
-			elseif ($attr[6] === '') {
-				$attributes[$attr[3]] = $attr[6];
-			}
 			else {
 				switch ($attr[7]) {
 					case 'true':
@@ -964,6 +962,9 @@ class HamlParser {
 						break;
 					case 'false':
 						break;
+					case '':
+  					$attributes[$attr[3]] = "";
+  					break;
 					default:
 						$attributes[$attr[3]] = "<?php echo {$attr[7]}; ?>";
 						break;
