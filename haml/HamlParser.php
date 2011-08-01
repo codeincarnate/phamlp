@@ -75,7 +75,7 @@ class HamlParser {
 	/**#@+
 	 * Regexes used to parse the document
 	 */
-	const REGEX_HAML = '/(?m)^([ \x09]*)((?::(\w*))?(?:%([\w:-]*))?(?:\.((?:(?:[-_:a-zA-Z]|#\{.+?\})+(?:[-:\w]|#\{.+?\})*(?:\.?))*))?(?:#((?:[_:a-zA-Z]|#\{.+?\})+(?:[-:\w]|#\{.+?\})*))?(?:\[(.+)\])?(?:(\()((?:(?:html_attrs\(.*?\)|data[\t ]*=[\t ]*\{.+?\}|(?:[_:a-zA-Z]+[-:\w]*)[\t ]*=[\t ]*.+)[\t ]*)+\)))?(?:(\{)((?::(?:html_attrs\(.*?\)|data[\t ]*=>[\t ]*\{.+?\}|(?:[_:a-zA-Z]+[-:\w]*)[\t ]*=>?[\t ]*.+)(?:,?[\t ]*)?)+\}))?(\|?>?\|?<?) *((?:\?#)|!!!|\/\/|\/|-#|!=|&=|!|&|=|-|~|\\\\\\\\)? *(.*?)(?:\s(\|)?)?)$/'; // Haml line
+	const REGEX_HAML = '/(?m)^([ \x09]*)((?::(\w*))?(?:%([\w:-]*))?(?:\.((?:(?:[-_:a-zA-Z]|#\{.+?\})+(?:[-:\w]|#\{.+?\})*(?:\.?))*))?(?:#((?:[_:a-zA-Z]|#\{.+?\})+(?:[-:\w]|#\{.+?\})*))?(?:\[(.+)\])?(?:(\()((?:(?:\w+\(.*?\)|data[\t ]*=[\t ]*\{.+?\}|(?:[_:a-zA-Z]+[-:\w]*)[\t ]*=[\t ]*.+)[\t ]*)+\)))?(?:(\{)((?:(?:\w+\(.*?\)|:data[\t ]*=>[\t ]*\{.+?\}|:(?:[_:a-zA-Z]+[-:\w]*)[\t ]*=>?[\t ]*.+)(?:,?[\t ]*)?)+\}))?(\|?>?\|?<?) *((?:\?#)|!!!|\/\/|\/|-#|!=|&=|!|&|=|-|~|\\\\\\\\)? *(.*?)(?:\s(\|)?)?)$/'; // Haml line
 	const REGEX_ATTRIBUTES = '/:?(?:(data)\s*=>?\s*([({].*?[})]))|(\w+(?:[-:]\w*)*)\s*=>?\s*(?(?=\[)(?:\[(.+?)\])|(?(?=([\'"]))(?:[\'"](.*?)\5)|([^\s,]+)))/';
 	const REGEX_ATTRIBUTE_FUNCTION = '/^\$?[_a-zA-Z]\w*(?(?=->)(->[_a-zA-Z]\w*)+|(::[_a-zA-Z]\w*)?)\(.+\)$/'; // Matches functions and instantiated and static object methods
 	const REGEX_WHITESPACE_REMOVAL = '/(.*?)\s+$/s';
@@ -937,6 +937,7 @@ class HamlParser {
 		}
 		
 		preg_match_all(self::REGEX_ATTRIBUTES, $subject, $attrs, PREG_SET_ORDER);
+    // print_r($attrs);
 		foreach ($attrs as $attr) {
 			if (!empty($attr[1])) { // HTML5 Custom Data Attributes
 				$dataAttributes = $this->parseAttributeHash(substr($attr[2], 1));
@@ -954,9 +955,6 @@ class HamlParser {
 			elseif (!empty($attr[6])) {
 				$attributes[$attr[3]] = $this->interpolate($attr[6], $attr[3]);
 			}
-			elseif ($attr[6] === '') {
-				$attributes[$attr[3]] = $attr[6];
-			}
 			else {
 				switch ($attr[7]) {
 					case 'true':
@@ -964,6 +962,9 @@ class HamlParser {
 						break;
 					case 'false':
 						break;
+					case '':
+  					$attributes[$attr[3]] = "";
+  					break;
 					default:
 						$attributes[$attr[3]] = "<?php echo {$attr[7]}; ?>";
 						break;
