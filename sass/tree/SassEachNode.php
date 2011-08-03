@@ -58,11 +58,10 @@ class SassEachNode extends SassNode {
 	 */
 	public function parse($context) {
 		$children = array();
-		$in = explode(', ', $this->in);
 
 		$context = new SassContext($context);
-		foreach ($in as $var) {
-			$context->setVariable($this->variable, new SassString($var));
+		foreach (explode(',', $this->evaluate($this->in, $context)->value) as $var) {
+			$context->setVariable($this->variable, new SassString(trim($var)));
 			$children = array_merge($children, $this->parseChildren($context));
 		}
 		return $children;
