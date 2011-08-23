@@ -459,10 +459,8 @@ class SassParser {
 		if ($isFile) {
 			$this->filename = SassFile::getFile($source, $this);
 			
-			if ($isFile) {
-				$this->syntax = substr($this->filename, -4);
-			}
-			elseif ($this->syntax !== SassFile::SASS && $this->syntax !== SassFile::SCSS) {
+			$this->syntax = substr($this->filename, -4);
+			if ($this->syntax !== SassFile::SASS && $this->syntax !== SassFile::SCSS) {
 				throw new SassException('Invalid {what}', array('{what}'=>'syntax option'));
 			}
 
@@ -794,6 +792,9 @@ class SassParser {
 					}
 				}
 				return new SassImportNode($token);
+				break;
+			case '@each':
+				return new SassEachNode($token);
 				break;
 			case '@for':
 				return new SassForNode($token);

@@ -163,7 +163,7 @@ class SassScriptFunction {
 			}
 		}
 		
-		if ($arg) $args[] = trim($arg);
+		if ($arg!='') $args[] = trim($arg);
 		return $args;
 	}
 }

@@ -21,6 +21,7 @@ require_once('SassRootNode.php');
 require_once('SassRuleNode.php');
 require_once('SassVariableNode.php');
 require_once('SassExtendNode.php');
+require_once('SassEachNode.php');
 require_once('SassForNode.php');
 require_once('SassIfNode.php');
 require_once('SassElseNode.php');
@@ -278,7 +279,9 @@ class SassNode {
 	 * @param boolean true if this node is in a SassScript directive, false if not
 	 */
 	public function inSassScriptDirective() {
-		return $this->parent instanceof SassForNode ||
+		return $this->parent instanceof SassEachNode ||
+				$this->parent->parent instanceof SassEachNode ||
+				$this->parent instanceof SassForNode ||
 				$this->parent->parent instanceof SassForNode ||
 				$this->parent instanceof SassIfNode ||
 				$this->parent->parent instanceof SassIfNode ||
