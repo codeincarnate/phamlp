@@ -49,7 +49,7 @@ class SassScriptLexer {
 	 */
 	public function lex($string, $context) {
 		$tokens = array();
-		while ($string !== false) {
+		while ($string != false) {
 			if (($match = $this->isWhitespace($string)) !== false) {
 				$tokens[] = null;
 			}
